@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
   public location: Location;
   user: User;
   subscription: Subscription;
+  userPhotoURL: string = 'assets/img/theme/team-4-800x800.jpg'; // Foto por defecto
 
   constructor(
     location: Location,
@@ -31,6 +32,18 @@ export class NavbarComponent implements OnInit {
     // Obtener información del usuario
     this.subscription = this.securityService.getUser().subscribe(data => {
       this.user = data;
+      
+      console.log('Usuario en navbar:', data); // 🔍 DEBUG
+      console.log('PhotoURL:', data?.photoURL); // 🔍 DEBUG
+      
+      // Actualizar foto de perfil (OAuth o default)
+      if (data && data.photoURL) {
+        this.userPhotoURL = data.photoURL;
+        console.log('Foto actualizada a:', this.userPhotoURL); // 🔍 DEBUG
+      } else {
+        this.userPhotoURL = 'assets/img/theme/team-4-800x800.jpg';
+        console.log('Usando foto por defecto'); // 🔍 DEBUG
+      }
     });
 
     // Configurar WebSocket
@@ -42,6 +55,12 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.listTitles = ROUTES.filter(listTitle => listTitle);
+    
+    // Forzar actualización de foto al cargar el componente
+    const currentUser = this.securityService.activeUserSession;
+    if (currentUser && currentUser.photoURL) {
+      this.userPhotoURL = currentUser.photoURL;
+    }
   }
 
   getTitle() {
@@ -58,7 +77,6 @@ export class NavbarComponent implements OnInit {
     return 'Dashboard';
   }
 
-  
   logout() {
     // Llamar al servicio de cierre de sesión
     this.securityService.logout();

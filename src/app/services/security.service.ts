@@ -97,7 +97,9 @@ export class SecurityService {
       name: dataSesion["name"],
       email: dataSesion["email"],
       password: "",
-      token: dataSesion["token"]
+      token: dataSesion["token"],
+      photoURL: dataSesion["photoURL"] || '',
+      provider: dataSesion["provider"] || 'email'
     };
     localStorage.setItem('sesion', JSON.stringify(data));
     this.setUser(data);
