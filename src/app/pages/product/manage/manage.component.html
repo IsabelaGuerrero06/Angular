@@ -1,0 +1,107 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0" *ngIf="mode==1">Details</h3>
+                    <h3 class="mb-0" *ngIf="mode==2">Create</h3>
+                    <h3 class="mb-0" *ngIf="mode==3">Update</h3>
+                </div>
+                <div class="card-body">
+                    <form class="form" [formGroup]="theFormGroup">
+                        <div class="card-body container">
+                            <div class="row">
+                                <div class="col-3">ID</div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" formControlName="id"  disabled>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3">Name</div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" 
+                                        [disabled]="mode==1" formControlName="name">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.name.errors && (getTheFormGroup.name.dirty || getTheFormGroup.name.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.name.errors.required"
+                                            class="msnError">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.name.errors.minlength"
+                                            class="msnError">Invalid
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3">Description</div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" 
+                                        [disabled]="mode==1" formControlName="description">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.description.errors && (getTheFormGroup.description.dirty || getTheFormGroup.description.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.description.errors.required"
+                                            class="msnError">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.description.errors.minlength"
+                                            class="msnError">Invalid
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3">Price</div>
+                                <div class="col-9">
+                                    <input type="number" class="form-control"  [disabled]="mode==1" formControlName="price">
+
+                                    <div *ngIf="getTheFormGroup.price.errors && (getTheFormGroup.price.dirty || getTheFormGroup.price.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.price.errors.min" class="msnError">Minimum value must be 100</strong>
+                                        <strong *ngIf="getTheFormGroup.price.errors.max" class="msnError">Maximum value must be 100000000 </strong>
+                                        <strong *ngIf="getTheFormGroup.price.errors.required"
+                                            class="msnError">Required</strong>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3">Category</div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" 
+                                        [disabled]="mode==1" formControlName="category">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.category.errors && (getTheFormGroup.category.dirty || getTheFormGroup.category.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.category.errors.required"
+                                            class="msnError">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.category.errors.minlength"
+                                            class="msnError">Invalid
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3"></div>
+                                <div class="col-9">
+                                    <button type="button" class="btn btn-primary btn-block" (click)="back()"
+                                        *ngIf="mode==1">Go Back</button>
+                                    <button type="button" class="btn btn-success btn-block" (click)="create()"
+                                        *ngIf="mode==2">Create</button>
+                                    <button type="button" class="btn btn-warning btn-block" (click)="update()"
+                                        *ngIf="mode==3">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

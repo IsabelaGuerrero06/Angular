@@ -20,6 +20,11 @@ export const AdminLayoutRoutes: Routes = [
                 path: 'theaters',
                 canActivate: [AuthenticationGuard],
                 loadChildren: () => import('src/app/pages/theaters/theaters.module').then(m => m.TheatersModule)
+            },
+            {
+                path: 'products',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/product/product.module').then(m => m.ProductModule)
             }
         ]
     }
