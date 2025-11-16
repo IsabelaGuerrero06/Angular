@@ -25,6 +25,16 @@ export const AdminLayoutRoutes: Routes = [
                 path: 'products',
                 canActivate: [AuthenticationGuard],
                 loadChildren: () => import('src/app/pages/product/product.module').then(m => m.ProductModule)
+            },
+            {
+                path: 'menus',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/menu/menu.module').then(m => m.MenuModule)
+            },
+            {
+                path: 'restaurants',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/restaurant/restaurant.module').then(m => m.RestaurantModule)
             }
         ]
     }

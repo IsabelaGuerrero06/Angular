@@ -71,10 +71,16 @@ export class ManageComponent implements OnInit {
           category: this.product.category
         });
         
+        // Si está en modo view, deshabilitar todos los campos
+        if (this.mode === 1) {
+          this.theFormGroup.disable();
+        }
+        
         console.log('Product fetched successfully:', this.product);
       },
       error: (error) => {
         console.error('Error fetching product:', error);
+        Swal.fire('Error', 'Could not load product details', 'error');
       }
     });
   }
@@ -87,7 +93,7 @@ export class ManageComponent implements OnInit {
     if (this.theFormGroup.invalid) {
       Swal.fire({
         title: 'Error!',
-        text: 'Por favor, complete todos los campos requeridos.',
+        text: 'Please complete all required fields.',
         icon: 'error',
       })
       return;
@@ -96,14 +102,15 @@ export class ManageComponent implements OnInit {
       next: (product) => {
         console.log('Product created successfully:', product);
         Swal.fire({
-          title: 'Creado!',
-          text: 'Registro creado correctamente.',
+          title: 'Created!',
+          text: 'Product created successfully.',
           icon: 'success',
         })
         this.router.navigate(['/products/list']);
       },
       error: (error) => {
         console.error('Error creating product:', error);
+        Swal.fire('Error', 'Could not create product', 'error');
       }
     });
   }
@@ -112,7 +119,7 @@ export class ManageComponent implements OnInit {
     if (this.theFormGroup.invalid) {
       Swal.fire({
         title: 'Error!',
-        text: 'Por favor, complete todos los campos requeridos.',
+        text: 'Please complete all required fields.',
         icon: 'error',
       })
       return;
@@ -121,14 +128,15 @@ export class ManageComponent implements OnInit {
       next: (product) => {
         console.log('Product updated successfully:', product);
         Swal.fire({
-          title: 'Actualizado!',
-          text: 'Registro actualizado correctamente.',
+          title: 'Updated!',
+          text: 'Product updated successfully.',
           icon: 'success',
         })
         this.router.navigate(['/products/list']);
       },
       error: (error) => {
         console.error('Error updating product:', error);
+        Swal.fire('Error', 'Could not update product', 'error');
       }
     });
   }

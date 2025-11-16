@@ -1,1 +1,147 @@
-<p>manage works!</p>
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0" *ngIf="mode==1">Menu Details</h3>
+                    <h3 class="mb-0" *ngIf="mode==2">Create Menu</h3>
+                    <h3 class="mb-0" *ngIf="mode==3">Update Menu</h3>
+                </div>
+                <div class="card-body">
+                    <form class="form" [formGroup]="theFormGroup">
+                        <div class="card-body container">
+                            <!-- ID -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">ID</label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" formControlName="id" disabled>
+                                </div>
+                            </div>
+
+                            <!-- Restaurant Select -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Restaurant</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="restaurant_id">
+                                        <option value="">-- Select Restaurant --</option>
+                                        <option *ngFor="let restaurant of restaurants" [value]="restaurant.id">
+                                            {{restaurant.name}} (ID: {{restaurant.id}})
+                                        </option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.restaurant_id.errors && (getTheFormGroup.restaurant_id.dirty || getTheFormGroup.restaurant_id.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.restaurant_id.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Select -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Product</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="product_id">
+                                        <option value="">-- Select Product --</option>
+                                        <option *ngFor="let product of products" [value]="product.id">
+                                            {{product.name}} - ${{product.price}} (ID: {{product.id}})
+                                        </option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.product_id.errors && (getTheFormGroup.product_id.dirty || getTheFormGroup.product_id.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.product_id.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Price</label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="number" class="form-control" [disabled]="mode==1" formControlName="price" placeholder="0.00" step="0.01">
+
+                                    <div *ngIf="getTheFormGroup.price.errors && (getTheFormGroup.price.dirty || getTheFormGroup.price.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.price.errors.min" class="text-danger">
+                                            Minimum value must be 100
+                                        </strong>
+                                        <strong *ngIf="getTheFormGroup.price.errors.max" class="text-danger">
+                                            Maximum value must be 100000000
+                                        </strong>
+                                        <strong *ngIf="getTheFormGroup.price.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Availability -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Availability</label>
+                                </div>
+                                <div class="col-9">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="availability-checkbox" [disabled]="mode==1" formControlName="availability">
+                                        <label class="custom-control-label" for="availability-checkbox">
+                                            Available for sale
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-3"></div>
+                                <div class="col-9">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-primary btn-block" 
+                                        (click)="back()" 
+                                        *ngIf="mode==1">
+                                        <i class="fas fa-arrow-left"></i> Go Back
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-block" 
+                                        (click)="create()" 
+                                        *ngIf="mode==2">
+                                        <i class="fas fa-save"></i> Create
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-warning btn-block" 
+                                        (click)="update()" 
+                                        *ngIf="mode==3">
+                                        <i class="fas fa-save"></i> Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

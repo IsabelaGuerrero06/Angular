@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { RestaurantRoutingModule } from './restaurant-routing.module';
 import { ListComponent } from './list/list.component';
 import { ManageComponent } from './manage/manage.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -11,7 +14,10 @@ import { ManageComponent } from './manage/manage.component';
     ManageComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RestaurantRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class RestaurantModule { }
