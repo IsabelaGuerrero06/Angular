@@ -35,6 +35,11 @@ export const AdminLayoutRoutes: Routes = [
                 path: 'restaurants',
                 canActivate: [AuthenticationGuard],
                 loadChildren: () => import('src/app/pages/restaurant/restaurant.module').then(m => m.RestaurantModule)
+            },
+            {
+                path: 'issues',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/issue/issue.module').then(m => m.IssueModule)
             }
         ]
     }
