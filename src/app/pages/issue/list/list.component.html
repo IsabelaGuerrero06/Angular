@@ -41,27 +41,27 @@
                                     <td>{{issue.motorcycle_id}}</td>
                                     <td>{{issue.description}}</td>
                                     <td>{{issue.issue_type}}</td>
-                                    <td>{{issue.date_reported}}</td>
+                                    <td>{{issue.date_reported | date:'dd/MM/yyyy HH:mm'}}</td>
                                     <td>{{issue.status}}</td>
                                     <td>
                                         <!-- Botón View con navegación -->
                                         <button 
                                             class="btn btn-info btn-sm mr-2" 
-                                            [routerLink]="['/issues/view', issues.id]">
+                                            [routerLink]="['/issues/view', issue.id]">
                                             <i class="fas fa-eye"></i> View
                                         </button>
                                         
                                         <!-- Botón Update con navegación -->
                                         <button 
                                             class="btn btn-warning btn-sm mr-2" 
-                                            [routerLink]="['/issues/update', issues.id]">
+                                            [routerLink]="['/issues/update', issue.id]">
                                             <i class="fas fa-edit"></i> Update
                                         </button>
                                         
                                         <!-- Botón Delete -->
                                         <button 
                                             class="btn btn-danger btn-sm" 
-                                            (click)="delete(issues.id)">
+                                            (click)="delete(issue.id)">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                     </td>

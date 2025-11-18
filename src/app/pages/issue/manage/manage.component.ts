@@ -73,13 +73,27 @@ export class ManageComponent implements OnInit {
     this.motorcycleService.list().subscribe({
       next: (data) => {
         this.motorcycles = data;
-        console.log('Motorcycle loaded:', this.motorcycles);
+        console.log('Motorcycles loaded:', this.motorcycles);
       },
       error: (error) => {
-        console.error('Error loading motorcycle:', error);
-        Swal.fire('Error', 'Could not load motorcycle', 'error');
+        console.error('Error loading motorcycles:', error);
+        Swal.fire('Error', 'Could not load motorcycles', 'error');
       }
     });
+  }
+
+  // Convertir fecha para el input datetime-local
+  formatDateForInput(date: any): string {
+    if (!date) return '';
+    
+    try {
+      const d = new Date(date);
+      // Formato: "2024-11-17T23:45"
+      return d.toISOString().slice(0, 16);
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return '';
+    }
   }
 
   getIssue(id: number) {
@@ -92,7 +106,7 @@ export class ManageComponent implements OnInit {
           motorcycle_id: this.issue.motorcycle_id,
           description: this.issue.description,
           issue_type: this.issue.issue_type,
-          date_reported: this.issue.date_reported,
+          date_reported: this.formatDateForInput(this.issue.date_reported),
           status: this.issue.status
         });
 
@@ -125,7 +139,13 @@ export class ManageComponent implements OnInit {
       return;
     }
 
-    this.issueService.create(this.theFormGroup.value).subscribe({
+    // Convertir la fecha al formato ISO antes de enviar
+    const issueData = {
+      ...this.theFormGroup.value,
+      date_reported: new Date(this.theFormGroup.value.date_reported).toISOString()
+    };
+
+    this.issueService.create(issueData).subscribe({
       next: (issue) => {
         console.log('Issue created successfully:', issue);
         Swal.fire({
@@ -153,7 +173,13 @@ export class ManageComponent implements OnInit {
       return;
     }
 
-    this.issueService.update(this.theFormGroup.value).subscribe({
+    // Convertir la fecha al formato ISO antes de enviar
+    const issueData = {
+      ...this.theFormGroup.value,
+      date_reported: new Date(this.theFormGroup.value.date_reported).toISOString()
+    };
+
+    this.issueService.update(issueData).subscribe({
       next: (issue) => {
         console.log('Issue updated successfully:', issue);
         Swal.fire({

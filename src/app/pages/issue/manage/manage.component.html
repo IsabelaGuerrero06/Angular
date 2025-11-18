@@ -88,20 +88,20 @@
                             </div>
                             <br>
 
-                            <!-- Date Reported -->
+                            <!-- Date Reported con calendario -->
                             <div class="row">
                                 <div class="col-3">Date Reported</div>
                                 <div class="col-9">
-                                    <input type="text" class="form-control" 
-                                        [disabled]="mode==1" formControlName="date_reported">
+                                    <input 
+                                        type="datetime-local" 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="date_reported">
                                         
                                     <div
                                         *ngIf="getTheFormGroup.date_reported.errors && (getTheFormGroup.date_reported.dirty || getTheFormGroup.date_reported.touched || trySend)">
                                         <strong *ngIf="getTheFormGroup.date_reported.errors.required"
-                                            class="msnError">Required</strong>
-                                        <strong *ngIf="getTheFormGroup.date_reported.errors.minlength"
-                                            class="msnError">Invalid
-                                        </strong>
+                                            class="text-danger">Required</strong>
                                     </div>
                                 </div>
                             </div>
