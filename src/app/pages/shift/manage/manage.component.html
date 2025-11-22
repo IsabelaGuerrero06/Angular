@@ -1,0 +1,177 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0" *ngIf="mode==1">Shift Details</h3>
+                    <h3 class="mb-0" *ngIf="mode==2">Create Shift</h3>
+                    <h3 class="mb-0" *ngIf="mode==3">Update Shift</h3>
+                </div>
+                <div class="card-body">
+                    <form class="form" [formGroup]="theFormGroup">
+                        <div class="card-body container">
+                            <!-- ID -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">ID</label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" formControlName="id" disabled>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Driver Select -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Driver</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="driver_id">
+                                        <option value="">-- Select Driver --</option>
+                                        <option *ngFor="let driver of drivers" [value]="driver.id">
+                                            {{driver.name}} - {{driver.license_number}}
+                                        </option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.driver_id.errors && (getTheFormGroup.driver_id.dirty || getTheFormGroup.driver_id.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.driver_id.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Motorcycle Select -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Motorcycle</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="motorcycle_id">
+                                        <option value="">-- Select Motorcycle --</option>
+                                        <option *ngFor="let motorcycle of motorcycles" [value]="motorcycle.id">
+                                            {{motorcycle.license_plate}} (ID: {{motorcycle.id}})
+                                        </option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.motorcycle_id.errors && (getTheFormGroup.motorcycle_id.dirty || getTheFormGroup.motorcycle_id.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.motorcycle_id.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Start Time -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Start Time</label>
+                                </div>
+                                <div class="col-9">
+                                    <input 
+                                        type="datetime-local" 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="start_time">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.start_time.errors && (getTheFormGroup.start_time.dirty || getTheFormGroup.start_time.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.start_time.errors.required"
+                                            class="text-danger">Required</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- End Time -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">End Time</label>
+                                </div>
+                                <div class="col-9">
+                                    <input 
+                                        type="datetime-local" 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="end_time">
+                                    <small class="form-text text-muted">
+                                        Leave empty if shift is still active
+                                    </small>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Status -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Status</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="status">
+                                        <option value="active">Active</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="paused">Paused</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.status.errors && (getTheFormGroup.status.dirty || getTheFormGroup.status.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.status.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-3"></div>
+                                <div class="col-9">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-primary btn-block" 
+                                        (click)="back()" 
+                                        *ngIf="mode==1">
+                                        <i class="fas fa-arrow-left"></i> Go Back
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-block" 
+                                        (click)="create()" 
+                                        *ngIf="mode==2">
+                                        <i class="fas fa-save"></i> Create
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-warning btn-block" 
+                                        (click)="update()" 
+                                        *ngIf="mode==3">
+                                        <i class="fas fa-save"></i> Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

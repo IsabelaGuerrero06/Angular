@@ -40,6 +40,26 @@ export const AdminLayoutRoutes: Routes = [
                 path: 'issues',
                 canActivate: [AuthenticationGuard],
                 loadChildren: () => import('src/app/pages/issue/issue.module').then(m => m.IssueModule)
+            },
+            {
+                path: 'drivers',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/driver/driver.module').then(m => m.DriverModule)
+            },
+            {
+                path: 'motorcycles',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/motorcycle/motorcycle.module').then(m => m.MotorcycleModule)
+            },
+            {
+                path: 'shifts',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/shift/shift.module').then(m => m.ShiftModule)
+            },
+            {
+                path: 'photos',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/photo/photo.module').then(m => m.PhotoModule)
             }
         ]
     }

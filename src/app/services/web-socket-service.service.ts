@@ -33,6 +33,6 @@ export class WebSocketService extends Socket {
   // Para llamar este método es necesario inyectar el servicio
   // y enviar el payload
   // emitEvent=(payload={})=>{
-  //   this.ioSocket.emit(this.nameEvent,payload)
+  //   this.ioSocket.emit(this.nameEvent,payload)
   // }
 }

@@ -1,0 +1,183 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0" *ngIf="mode==1">Photo Details</h3>
+                    <h3 class="mb-0" *ngIf="mode==2">Upload Photo</h3>
+                    <h3 class="mb-0" *ngIf="mode==3">Update Photo</h3>
+                </div>
+                <div class="card-body">
+                    <form class="form" [formGroup]="theFormGroup">
+                        <div class="card-body container">
+                            <!-- ID -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">ID</label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" formControlName="id" disabled>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Issue Select -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Issue</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="issue_id">
+                                        <option value="">-- Select Issue --</option>
+                                        <option *ngFor="let issue of issues" [value]="issue.id">
+                                            Issue #{{issue.id}} - {{issue.description}}
+                                        </option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.issue_id.errors && (getTheFormGroup.issue_id.dirty || getTheFormGroup.issue_id.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.issue_id.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- File Upload -->
+                            <div class="row mb-3" *ngIf="mode==2 || mode==3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Image File</label>
+                                </div>
+                                <div class="col-9">
+                                    <div class="custom-file">
+                                        <input 
+                                            type="file" 
+                                            class="custom-file-input" 
+                                            id="imageFile"
+                                            accept="image/*"
+                                            (change)="onFileSelected($event)">
+                                        <label class="custom-file-label" for="imageFile">
+                                            {{ selectedFile ? selectedFile.name : 'Choose file' }}
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted" *ngIf="mode==2">
+                                        Required for new photos
+                                    </small>
+                                    <small class="form-text text-muted" *ngIf="mode==3">
+                                        Leave empty to keep current image
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Image Preview -->
+                            <div class="row mb-3" *ngIf="imagePreview">
+                                <div class="col-3">
+                                    <label class="form-control-label">Preview</label>
+                                </div>
+                                <div class="col-9">
+                                    <img 
+                                        [src]="imagePreview" 
+                                        alt="Image preview"
+                                        class="img-thumbnail"
+                                        style="max-width: 300px; max-height: 300px; object-fit: contain;">
+                                </div>
+                            </div>
+                            <br *ngIf="imagePreview">
+
+                            <!-- Caption -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Caption</label>
+                                </div>
+                                <div class="col-9">
+                                    <textarea 
+                                        class="form-control" 
+                                        rows="3"
+                                        [disabled]="mode==1" 
+                                        formControlName="caption"
+                                        placeholder="Description or notes about this photo..."></textarea>
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.caption.errors && (getTheFormGroup.caption.dirty || getTheFormGroup.caption.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.caption.errors.minlength"
+                                            class="text-danger">Minimum 3 characters</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Taken At -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Taken At</label>
+                                </div>
+                                <div class="col-9">
+                                    <input 
+                                        type="datetime-local" 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="taken_at">
+                                    <small class="form-text text-muted">
+                                        Optional - when was this photo taken?
+                                    </small>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Image URL (read-only) -->
+                            <div class="row mb-3" *ngIf="mode==1 && photo.image_url">
+                                <div class="col-3">
+                                    <label class="form-control-label">Image Path</label>
+                                </div>
+                                <div class="col-9">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        [value]="photo.image_url"
+                                        disabled>
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-3"></div>
+                                <div class="col-9">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-primary btn-block" 
+                                        (click)="back()" 
+                                        *ngIf="mode==1">
+                                        <i class="fas fa-arrow-left"></i> Go Back
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-block" 
+                                        (click)="create()" 
+                                        *ngIf="mode==2">
+                                        <i class="fas fa-upload"></i> Upload Photo
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-warning btn-block" 
+                                        (click)="update()" 
+                                        *ngIf="mode==3">
+                                        <i class="fas fa-save"></i> Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
