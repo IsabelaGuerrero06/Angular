@@ -8,7 +8,8 @@ export const environment = {
   production: false,
   url_backend : 'http://127.0.0.1:5000',
   url_ms_security :'https://f2fe41f8-0662-4d7b-8f9e-c4e051483e4c.mock.pstmn.io',
-  url_web_socket: 'http://0.0.0.0:5000'
+  url_web_socket: 'http://0.0.0.0:5000',
+  url_mock_charts: 'https://a571fe5a-c44a-42b8-91be-a4f31b91d9e8.mock.pstmn.io'
 };
 
 /*
