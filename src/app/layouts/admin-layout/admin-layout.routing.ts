@@ -42,6 +42,21 @@ export const AdminLayoutRoutes: Routes = [
                 path: 'issues',
                 canActivate: [AuthenticationGuard],
                 loadChildren: () => import('src/app/pages/issue/issue.module').then(m => m.IssueModule)
+            },
+            {
+                path: 'addresses',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/address/address.module').then(m => m.AddressModule)
+            },
+            {
+                path: 'orders',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/order/order.module').then(m => m.OrderModule)
+            },
+            {
+                path: 'customers',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/customer/customer.module').then(m => m.CustomerModule)
             }
         ]
     }

@@ -1,0 +1,192 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0" *ngIf="mode==1">Order Details</h3>
+                    <h3 class="mb-0" *ngIf="mode==2">Create Order</h3>
+                    <h3 class="mb-0" *ngIf="mode==3">Update Order</h3>
+                </div>
+                <div class="card-body">
+                    <form class="form" [formGroup]="theFormGroup">
+                        <div class="card-body container">
+                            <!-- ID -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">ID</label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" formControlName="id" disabled>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Customer Select -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Customer</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="customer_id">
+                                        <option value="">-- Select Customer --</option>
+                                        <option *ngFor="let customer of customers" [value]="customer.id">
+                                            {{customer.name}} ({{customer.email}})
+                                        </option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.customer_id.errors && (getTheFormGroup.customer_id.dirty || getTheFormGroup.customer_id.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.customer_id.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Menu Select -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Menu</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="menu_id">
+                                        <option value="">-- Select Menu --</option>
+                                        <option *ngFor="let menu of menus" [value]="menu.id">
+                                            {{menu.name}} - ${{menu.price}}
+                                        </option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.menu_id.errors && (getTheFormGroup.menu_id.dirty || getTheFormGroup.menu_id.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.menu_id.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Motorcycle Select -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Motorcycle</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="motorcycle_id">
+                                        <option value="">-- Select Motorcycle --</option>
+                                        <option *ngFor="let motorcycle of motorcycles" [value]="motorcycle.id">
+                                            {{motorcycle.license_plate}} (ID: {{motorcycle.id}})
+                                        </option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.motorcycle_id.errors && (getTheFormGroup.motorcycle_id.dirty || getTheFormGroup.motorcycle_id.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.motorcycle_id.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Quantity -->
+                            <div class="row">
+                                <div class="col-3">Quantity</div>
+                                <div class="col-9">
+                                    <input type="number" class="form-control" 
+                                        [disabled]="mode==1" formControlName="quantity">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.quantity.errors && (getTheFormGroup.quantity.dirty || getTheFormGroup.quantity.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.quantity.errors.required"
+                                            class="text-danger">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.quantity.errors.min"
+                                            class="text-danger">Minimum quantity is 1</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Total Price -->
+                            <div class="row">
+                                <div class="col-3">Total Price</div>
+                                <div class="col-9">
+                                    <input type="number" step="0.01" class="form-control" 
+                                        [disabled]="mode==1" formControlName="total_price">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.total_price.errors && (getTheFormGroup.total_price.dirty || getTheFormGroup.total_price.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.total_price.errors.required"
+                                            class="text-danger">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.total_price.errors.min"
+                                            class="text-danger">Price must be positive</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Status -->
+                            <div class="row">
+                                <div class="col-3">Status</div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" 
+                                        [disabled]="mode==1" formControlName="status">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.status.errors && (getTheFormGroup.status.dirty || getTheFormGroup.status.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.status.errors.required"
+                                            class="text-danger">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.status.errors.minlength"
+                                            class="text-danger">Minimum 3 characters</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-3"></div>
+                                <div class="col-9">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-primary btn-block" 
+                                        (click)="back()" 
+                                        *ngIf="mode==1">
+                                        <i class="fas fa-arrow-left"></i> Go Back
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-block" 
+                                        (click)="create()" 
+                                        *ngIf="mode==2">
+                                        <i class="fas fa-save"></i> Create
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-warning btn-block" 
+                                        (click)="update()" 
+                                        *ngIf="mode==3">
+                                        <i class="fas fa-save"></i> Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
