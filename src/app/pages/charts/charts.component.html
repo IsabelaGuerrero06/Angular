@@ -1,0 +1,185 @@
+<div class="header bg-gradient-success pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-dark d-inline-block mb-0">Gráficos e Informes</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item"><a href="#">Análisis</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Gráficos</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  
+  <!-- SECCIÓN: GRÁFICOS CIRCULARES -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <h2 class="text-dark">
+        <i class="fas fa-chart-pie"></i> Gráficos Circulares
+      </h2>
+      <p class="text-dark">Distribución y análisis por categorías</p>
+    </div>
+  </div>
+  
+  <div class="row mb-5">
+    <!-- Loading State -->
+    <div *ngIf="!pieChartsLoaded && !pieChartsError" class="col-12">
+      <div class="alert alert-info">
+        <i class="fas fa-spinner fa-spin"></i> Cargando gráficos circulares desde mock server...
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="pieChartsError" class="col-12">
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i> 
+        <strong>Error al cargar gráficos circulares:</strong> {{ pieChartsError }}
+        <br>
+        <small>Verifica que el mock server esté activo y la URL sea correcta.</small>
+      </div>
+    </div>
+
+    <!-- Charts (solo se muestran cuando cargaron exitosamente) -->
+    <ng-container *ngIf="pieChartsLoaded">
+      <div class="col-xl-4 col-lg-6 mb-4">
+        <div class="card shadow h-100">
+          <div class="card-body">
+            <canvas id="pieChart1" height="250"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6 mb-4">
+        <div class="card shadow h-100">
+          <div class="card-body">
+            <canvas id="pieChart2" height="250"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6 mb-4">
+        <div class="card shadow h-100">
+          <div class="card-body">
+            <canvas id="pieChart3" height="250"></canvas>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- SECCIÓN: GRÁFICOS DE BARRAS -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <h2 class="text-dark">
+        <i class="fas fa-chart-bar"></i> Gráficos de Barras
+      </h2>
+      <p class="text-dark">Comparativas y estadísticas por períodos</p>
+    </div>
+  </div>
+  
+  <div class="row mb-5">
+    <!-- Loading State -->
+    <div *ngIf="!barChartsLoaded && !barChartsError" class="col-12">
+      <div class="alert alert-info">
+        <i class="fas fa-spinner fa-spin"></i> Cargando gráficos de barras desde mock server...
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="barChartsError" class="col-12">
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i> 
+        <strong>Error al cargar gráficos de barras:</strong> {{ barChartsError }}
+        <br>
+        <small>Verifica que el mock server esté activo y la URL sea correcta.</small>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <ng-container *ngIf="barChartsLoaded">
+      <div class="col-xl-4 col-lg-6 mb-4">
+        <div class="card shadow h-100">
+          <div class="card-body">
+            <canvas id="barChart1" height="250"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6 mb-4">
+        <div class="card shadow h-100">
+          <div class="card-body">
+            <canvas id="barChart2" height="250"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6 mb-4">
+        <div class="card shadow h-100">
+          <div class="card-body">
+            <canvas id="barChart3" height="250"></canvas>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- SECCIÓN: GRÁFICOS DE SERIES TEMPORALES -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <h2 class="text-dark">
+        <i class="fas fa-chart-line"></i> Gráficos de Series Temporales
+      </h2>
+      <p class="text-dark">Evolución y tendencias en el tiempo</p>
+    </div>
+  </div>
+  
+  <div class="row mb-5">
+    <!-- Loading State -->
+    <div *ngIf="!lineChartsLoaded && !lineChartsError" class="col-12">
+      <div class="alert alert-info">
+        <i class="fas fa-spinner fa-spin"></i> Cargando gráficos de líneas desde mock server...
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="lineChartsError" class="col-12">
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i> 
+        <strong>Error al cargar gráficos de líneas:</strong> {{ lineChartsError }}
+        <br>
+        <small>Verifica que el mock server esté activo y la URL sea correcta.</small>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <ng-container *ngIf="lineChartsLoaded">
+      <div class="col-xl-12 mb-4">
+        <div class="card shadow">
+          <div class="card-body">
+            <canvas id="lineChart1" height="250"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6 mb-4">
+        <div class="card shadow h-100">
+          <div class="card-body">
+            <canvas id="lineChart2" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6 mb-4">
+        <div class="card shadow h-100">
+          <div class="card-body">
+            <canvas id="lineChart3" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+</div>

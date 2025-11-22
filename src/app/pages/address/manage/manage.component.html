@@ -1,0 +1,191 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0" *ngIf="mode==1">Address Details</h3>
+                    <h3 class="mb-0" *ngIf="mode==2">Create Address</h3>
+                    <h3 class="mb-0" *ngIf="mode==3">Update Address</h3>
+                </div>
+                <div class="card-body">
+                    <form class="form" [formGroup]="theFormGroup">
+                        <div class="card-body container">
+                            <!-- ID -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">ID</label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" formControlName="id" disabled>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Order Select -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-control-label">Order</label>
+                                </div>
+                                <div class="col-9">
+                                    <select 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="order_id">
+                                        <option value="">-- Select Order --</option>
+                                        <option *ngFor="let order of orders" [value]="order.id">
+                                            Order #{{order.id}} - Customer: {{order.customer_id}} - ${{order.total_price}} - {{order.status}}
+                                        </option>
+                                    </select>
+                                    
+                                    <div *ngIf="getTheFormGroup.order_id.errors && (getTheFormGroup.order_id.dirty || getTheFormGroup.order_id.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.order_id.errors.required" class="text-danger">
+                                            Required
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Street -->
+                            <div class="row">
+                                <div class="col-3">Street</div>
+                                <div class="col-9">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="street"
+                                        placeholder="Enter street address">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.street.errors && (getTheFormGroup.street.dirty || getTheFormGroup.street.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.street.errors.required"
+                                            class="text-danger">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.street.errors.minlength"
+                                            class="text-danger">Minimum 3 characters</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- City -->
+                            <div class="row">
+                                <div class="col-3">City</div>
+                                <div class="col-9">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="city"
+                                        placeholder="Enter city">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.city.errors && (getTheFormGroup.city.dirty || getTheFormGroup.city.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.city.errors.required"
+                                            class="text-danger">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.city.errors.minlength"
+                                            class="text-danger">Minimum 2 characters</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- State -->
+                            <div class="row">
+                                <div class="col-3">State</div>
+                                <div class="col-9">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="state"
+                                        placeholder="Enter state or province">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.state.errors && (getTheFormGroup.state.dirty || getTheFormGroup.state.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.state.errors.required"
+                                            class="text-danger">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.state.errors.minlength"
+                                            class="text-danger">Minimum 2 characters</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Postal Code -->
+                            <div class="row">
+                                <div class="col-3">Postal Code</div>
+                                <div class="col-9">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="postal_code"
+                                        placeholder="Enter postal code">
+                                        
+                                    <div
+                                        *ngIf="getTheFormGroup.postal_code.errors && (getTheFormGroup.postal_code.dirty || getTheFormGroup.postal_code.touched || trySend)">
+                                        <strong *ngIf="getTheFormGroup.postal_code.errors.required"
+                                            class="text-danger">Required</strong>
+                                        <strong *ngIf="getTheFormGroup.postal_code.errors.minlength"
+                                            class="text-danger">Minimum 3 characters</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Additional Info -->
+                            <div class="row">
+                                <div class="col-3">Additional Info</div>
+                                <div class="col-9">
+                                    <textarea 
+                                        class="form-control" 
+                                        [disabled]="mode==1" 
+                                        formControlName="additional_info"
+                                        rows="3"
+                                        placeholder="Enter any additional information (optional)">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-3"></div>
+                                <div class="col-9">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-primary btn-block" 
+                                        (click)="back()" 
+                                        *ngIf="mode==1">
+                                        <i class="fas fa-arrow-left"></i> Go Back
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-block" 
+                                        (click)="create()" 
+                                        *ngIf="mode==2">
+                                        <i class="fas fa-save"></i> Create
+                                    </button>
+                                    
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-warning btn-block" 
+                                        (click)="update()" 
+                                        *ngIf="mode==3">
+                                        <i class="fas fa-save"></i> Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

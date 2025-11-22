@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
+import { ChartsComponent } from 'src/app/pages/charts/charts.component';
 import { IconsComponent } from '../../pages/icons/icons.component';
 import { MapsComponent } from '../../pages/maps/maps.component';
 import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
@@ -9,6 +10,7 @@ import { AuthenticationGuard } from 'src/app/guards/authentication.guard';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
+    { path: 'charts', component: ChartsComponent },
     { path: 'user-profile', component: UserProfileComponent },
     { path: 'tables', component: TablesComponent },
     { path: 'icons', component: IconsComponent },
@@ -40,6 +42,21 @@ export const AdminLayoutRoutes: Routes = [
                 path: 'issues',
                 canActivate: [AuthenticationGuard],
                 loadChildren: () => import('src/app/pages/issue/issue.module').then(m => m.IssueModule)
+            },
+            {
+                path: 'addresses',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/address/address.module').then(m => m.AddressModule)
+            },
+            {
+                path: 'orders',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/order/order.module').then(m => m.OrderModule)
+            },
+            {
+                path: 'customers',
+                canActivate: [AuthenticationGuard],
+                loadChildren: () => import('src/app/pages/customer/customer.module').then(m => m.CustomerModule)
             },
             {
                 path: 'drivers',
