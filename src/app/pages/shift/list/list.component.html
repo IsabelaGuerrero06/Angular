@@ -27,8 +27,8 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Driver</th>
-                                    <th scope="col">Motorcycle</th>
+                                    <th scope="col">Driver ID</th>
+                                    <th scope="col">Motorcycle ID</th>
                                     <th scope="col">Start Time</th>
                                     <th scope="col">End Time</th>
                                     <th scope="col">Status</th>
@@ -38,26 +38,8 @@
                             <tbody>
                                 <tr *ngFor="let shift of shifts">
                                     <td>{{shift.id}}</td>
-                                    <td>
-                                        <span *ngIf="shift.driver">
-                                            {{shift.driver.name}}
-                                            <br>
-                                            <small class="text-muted">{{shift.driver.license_number}}</small>
-                                        </span>
-                                        <span *ngIf="!shift.driver" class="text-muted">
-                                            ID: {{shift.driver_id}}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span *ngIf="shift.motorcycle">
-                                            {{shift.motorcycle.license_plate}}
-                                            <br>
-                                            <small class="text-muted">{{shift.motorcycle.brand}} ({{shift.motorcycle.year}})</small>
-                                        </span>
-                                        <span *ngIf="!shift.motorcycle" class="text-muted">
-                                            ID: {{shift.motorcycle_id}}
-                                        </span>
-                                    </td>
+                                    <td>{{shift.driver_id}}</td>
+                                    <td>{{shift.motorcycle_id}}</td>
                                     <td>{{shift.start_time | date:'dd/MM/yyyy HH:mm'}}</td>
                                     <td>
                                         <span *ngIf="shift.end_time">

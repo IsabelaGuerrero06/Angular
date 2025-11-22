@@ -74,30 +74,6 @@
                             </div>
                             <br>
 
-                            <!-- Model -->
-                            <div class="row mb-3">
-                                <div class="col-3">
-                                    <label class="form-control-label">Model</label>
-                                </div>
-                                <div class="col-9">
-                                    <input 
-                                        type="text" 
-                                        class="form-control" 
-                                        [disabled]="mode==1" 
-                                        formControlName="model"
-                                        placeholder="CBR 600, YZF-R1, etc.">
-                                        
-                                    <div
-                                        *ngIf="getTheFormGroup.model.errors && (getTheFormGroup.model.dirty || getTheFormGroup.model.touched || trySend)">
-                                        <strong *ngIf="getTheFormGroup.model.errors.required"
-                                            class="text-danger">Required</strong>
-                                        <strong *ngIf="getTheFormGroup.model.errors.minlength"
-                                            class="text-danger">Minimum 2 characters</strong>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-
                             <!-- Year -->
                             <div class="row mb-3">
                                 <div class="col-3">
