@@ -1,0 +1,94 @@
+<!-- Botón flotante para abrir el chat -->
+<div class="chatbot-container" *ngIf="!isOpen">
+  <button class="chatbot-button" (click)="toggleChat()" title="Abrir asistente virtual">
+    <i class="ni ni-chat-round"></i>
+    <span class="pulse-ring"></span>
+  </button>
+</div>
+
+<!-- Ventana del chat -->
+<div class="chat-window" *ngIf="isOpen" [class.minimized]="isMinimized">
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <div class="avatar">
+        <i class="ni ni-chat-round"></i>
+      </div>
+      <div class="header-text">
+        <h6 class="mb-0">Asistente Virtual</h6>
+        <small class="text-muted">DeliveryApp</small>
+      </div>
+    </div>
+    <div class="chat-header-actions">
+      <button class="btn-icon" (click)="minimizeChat()" title="Minimizar">
+        <i class="ni" [ngClass]="isMinimized ? 'ni-bold-up' : 'ni-bold-down'"></i>
+      </button>
+      <button class="btn-icon" (click)="clearChat()" title="Limpiar chat">
+        <i class="ni ni-archive-2"></i>
+      </button>
+      <button class="btn-icon" (click)="toggleChat()" title="Cerrar">
+        <i class="ni ni-fat-remove"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages" *ngIf="!isMinimized">
+    <div *ngFor="let message of messages" 
+         class="message" 
+         [class.user-message]="message.role === 'user'"
+         [class.assistant-message]="message.role === 'assistant'">
+      <div class="message-avatar" *ngIf="message.role === 'assistant'">
+        <i class="ni ni-chat-round"></i>
+      </div>
+      <div class="message-content">
+        <div class="message-bubble">
+          {{ message.content }}
+        </div>
+        <small class="message-time">{{ message.timestamp | date: 'shortTime' }}</small>
+      </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="message assistant-message">
+      <div class="message-avatar">
+        <i class="ni ni-chat-round"></i>
+      </div>
+      <div class="message-content">
+        <div class="message-bubble typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Questions -->
+  <div class="quick-questions" *ngIf="!isMinimized && messages.length <= 2">
+    <small class="text-muted mb-2 d-block">Preguntas frecuentes:</small>
+    <div class="quick-questions-grid">
+      <button *ngFor="let question of quickQuestions" 
+              class="quick-question-btn"
+              (click)="sendQuickQuestion(question)">
+        {{ question }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input" *ngIf="!isMinimized">
+    <textarea 
+      [(ngModel)]="userMessage" 
+      (keydown)="handleKeyPress($event)"
+      placeholder="Escribe tu pregunta..."
+      rows="1"
+      [disabled]="isLoading">
+    </textarea>
+    <button class="send-button" 
+            (click)="sendMessage()" 
+            [disabled]="!userMessage.trim() || isLoading">
+      <i class="ni ni-send"></i>
+    </button>
+  </div>
+</div>
