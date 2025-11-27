@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GeminiService, ChatMessage } from '../../services/gemini.service.service';
+import { GeminiService, ChatMessage } from '../../services/gemini.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -65,25 +65,26 @@ export class ChatbotComponent implements OnInit {
 
     this.scrollToBottom();
 
-    // Enviar a Gemini
+    // Enviar a Gemini - AQUÍ ESTÁ EL CAMBIO
     this.geminiService.sendMessage(message).subscribe({
-      next: (response) => {
+      next: (responseText: string) => {  // Especificar tipo explícitamente
+        // Agregar la respuesta del asistente
         this.messages.push({
           role: 'assistant',
-          content: response,
+          content: responseText,  // Ya es un string
           timestamp: new Date()
         });
         this.isLoading = false;
         this.scrollToBottom();
         
-        // Detectar si la respuesta menciona una ruta y ofrecerla
-        this.detectRoute(response);
+        // Detectar si la respuesta menciona una ruta
+        this.detectRoute(responseText);
       },
       error: (error) => {
         console.error('Error al comunicarse con Gemini:', error);
         this.messages.push({
           role: 'assistant',
-          content: 'Lo siento, ocurrió un error. Por favor intenta de nuevo.',
+          content: 'Lo siento, hubo un error al procesar tu mensaje. Por favor intenta de nuevo.',
           timestamp: new Date()
         });
         this.isLoading = false;
@@ -120,8 +121,8 @@ export class ChatbotComponent implements OnInit {
     const routeMatch = response.match(/\/([\w-]+)\/([\w-]+)/);
     if (routeMatch) {
       const route = routeMatch[0];
-      // Aquí podrías agregar un botón para navegar directamente
       console.log('Ruta detectada:', route);
+      // Aquí podrías agregar un botón para navegar directamente
     }
   }
 

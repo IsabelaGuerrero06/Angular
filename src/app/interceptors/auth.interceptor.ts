@@ -27,8 +27,9 @@ export class AuthInterceptor implements HttpInterceptor {
     const excludedUrls = [
       '/login',
       '/token-validation',
-      'generativelanguage.googleapis.com', // API de Gemini
-      'googleapis.com' // Cualquier API de Google
+      '/photos/upload',  // AGREGADO: No interceptar upload de fotos
+      'generativelanguage.googleapis.com',
+      'googleapis.com'
     ];
     
     // Verificar si la URL debe ser excluida
@@ -55,7 +56,7 @@ export class AuthInterceptor implements HttpInterceptor {
           console.error('❌ Error HTTP interceptado:', err.status, err.message);
           
           if (err.status === 401) {
-            // Error de autenticación - cerrar sesión solo si la petición es al backend
+            // Error de autenticación
             if (request.url.includes(this.getBackendUrl())) {
               Swal.fire({
                 title: 'Sesión expirada',
@@ -65,12 +66,10 @@ export class AuthInterceptor implements HttpInterceptor {
                 showConfirmButton: false
               });
               
-              // Cerrar sesión y redirigir al login
               this.securityService.logout();
               this.router.navigateByUrl('/login');
             }
           } else if (err.status === 400) {
-            // Error de validación - solo mostrar si es del backend
             if (request.url.includes(this.getBackendUrl())) {
               Swal.fire({
                 title: 'Error en la solicitud',
@@ -93,24 +92,26 @@ export class AuthInterceptor implements HttpInterceptor {
               icon: 'error',
               timer: 3000
             });
+          } else if (err.status === 0) {
+            console.error('⚠️ Error de red o CORS detectado');
+            Swal.fire({
+              title: 'Error de conexión',
+              text: 'No se pudo conectar con el servidor. Verifica tu conexión.',
+              icon: 'error',
+              timer: 4000
+            });
           }
 
-          // IMPORTANTE: Propagar el error para que los componentes puedan manejarlo
           return throwError(() => err);
         })
       );
     } else {
-      // Si no hay token, continuar sin modificar la petición
       console.log("⚠️ No hay token, continuando sin autenticación");
       return next.handle(request);
     }
   }
 
-  /**
-   * Obtiene la URL del backend desde environment
-   */
   private getBackendUrl(): string {
-    // Asumiendo que tienes environment importado
-    return 'http://127.0.0.1:5000'; // O usa environment.url_backend
+    return 'http://127.0.0.1:5000';
   }
 }
