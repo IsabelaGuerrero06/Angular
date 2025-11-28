@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { User } from 'src/app/models/User';
+import { SecurityService } from 'src/app/services/security.service';
 
 declare interface RouteInfo {
     path: string;
@@ -7,10 +10,10 @@ declare interface RouteInfo {
     icon: string;
     class: string;
 }
-
 export const ROUTES: RouteInfo[] = [
-    { path: '/dashboard', title: 'Dashboard', icon: 'ni-tv-2 text-primary', class: '' },
-    { path: '/charts', title: 'Gráficos', icon: 'ni-chart-bar-32 text-success', class: '' },
+    { path: '/dashboard', title: 'Dashboard',  icon: 'ni-tv-2 text-primary', class: '' },
+    { path: '/charts', title: 'Gráficos',  icon: 'ni-chart-bar-32 text-success', class: '' },
+    { path: '/orders-map', title: 'Mapa Pedidos',  icon: 'ni-pin-3 text-orange', class: '' },
     { path: '/products/list', title: 'Products', icon: 'ni-box-2 text-red', class: '' },
     { path: '/menus/list', title: 'Menus', icon: 'ni-book-bookmark text-purple', class: '' },
     { path: '/restaurants/list', title: 'Restaurants', icon: 'ni-shop text-default', class: '' },
@@ -33,13 +36,21 @@ export class SidebarComponent implements OnInit {
 
   public menuItems: any[];
   public isCollapsed = true;
+  user: User;
+  subscription:Subscription;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+  public securityService:SecurityService) {
+
+      this.subscription = this.securityService.getUser().subscribe(data => {
+      this.user = data;
+    })
+   }
 
   ngOnInit() {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;
-    });
+   });
   }
 }

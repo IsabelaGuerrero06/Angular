@@ -1,0 +1,109 @@
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-12">
+          <h6 class="h2 text-white d-inline-block mb-0">Mapa de Pedidos</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">
+                <i class="fas fa-map-marked-alt"></i> Seguimiento en Tiempo Real
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Controles -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <label class="form-control-label">Seleccionar Motocicleta</label>
+              <select 
+                class="form-control" 
+                [(ngModel)]="selectedPlate"
+                [disabled]="isTracking">
+                <option value="">-- Selecciona una moto --</option>
+                <option *ngFor="let moto of motorcycles" [value]="moto.license_plate">
+                  {{moto.license_plate}} - {{moto.brand}} ({{moto.status}})
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <button 
+                *ngIf="!isTracking"
+                class="btn btn-success mr-2" 
+                (click)="startTracking()"
+                [disabled]="!selectedPlate">
+                <i class="fas fa-play"></i> Iniciar Tracking
+              </button>
+              <button 
+                *ngIf="isTracking"
+                class="btn btn-danger" 
+                (click)="stopTracking()">
+                <i class="fas fa-stop"></i> Detener Tracking
+              </button>
+            </div>
+          </div>
+
+          <!-- Estado actual -->
+          <div class="alert alert-info" *ngIf="isTracking">
+            <i class="fas fa-satellite-dish"></i> 
+            <strong>Tracking activo:</strong> Siguiendo motocicleta <strong>{{selectedPlate}}</strong> en tiempo real
+          </div>
+
+          <div class="alert alert-warning" *ngIf="!isTracking && motorcycles.length > 0">
+            <i class="fas fa-info-circle"></i> 
+            Selecciona una motocicleta y haz clic en "Iniciar Tracking" para ver su ubicación en tiempo real
+          </div>
+
+          <!-- Mapa -->
+          <div id="map" style="height: 600px; width: 100%; border-radius: 8px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leyenda -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-body">
+          <h4 class="mb-3">
+            <i class="fas fa-info-circle"></i> Información
+          </h4>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-map-marker-alt text-primary mr-2" style="font-size: 24px;"></i>
+                <span><strong>Marcador:</strong> Ubicación actual de la moto</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-sync-alt text-success mr-2" style="font-size: 24px;"></i>
+                <span><strong>Actualización:</strong> Cada 5 segundos</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-mouse-pointer text-danger mr-2" style="font-size: 24px;"></i>
+                <span><strong>Click:</strong> Ver detalles de ubicación</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
