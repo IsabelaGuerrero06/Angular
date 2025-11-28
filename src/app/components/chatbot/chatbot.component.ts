@@ -14,11 +14,14 @@ export class ChatbotComponent implements OnInit, OnDestroy {
   isLoading = false;
   isMinimized = false;
   
-  // 🎤 Nuevas propiedades para voz
+  // 🎤 Propiedades para voz
   isSpeaking = false;
   voiceEnabled = true;
   speechSynthesis: SpeechSynthesis;
   currentUtterance: SpeechSynthesisUtterance | null = null;
+  
+  // 🎯 Nueva: Voz femenina seleccionada
+  selectedFemaleVoice: SpeechSynthesisVoice | null = null;
 
   quickQuestions = [
     '¿Para qué sirve este sistema?',
@@ -35,13 +38,13 @@ export class ChatbotComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Cargar voces disponibles (necesario en algunos navegadores)
+    // Cargar y seleccionar la mejor voz femenina
     if (this.speechSynthesis.getVoices().length === 0) {
       this.speechSynthesis.addEventListener('voiceschanged', () => {
-        this.logAvailableVoices();
+        this.selectBestFemaleVoice();
       });
     } else {
-      this.logAvailableVoices();
+      this.selectBestFemaleVoice();
     }
 
     // Mensaje de bienvenida
@@ -55,22 +58,38 @@ export class ChatbotComponent implements OnInit, OnDestroy {
     // Reproducir bienvenida al abrir
     setTimeout(() => {
       if (this.isOpen && this.voiceEnabled) {
-        this.speak(welcomeMessage);
+        this.speakText(welcomeMessage);
       }
     }, 500);
   }
 
-  // 📋 Método para ver voces disponibles en consola
-  private logAvailableVoices() {
+  // 🎯 NUEVO: Seleccionar "Google español" específicamente
+  private selectBestFemaleVoice() {
     const voices = this.speechSynthesis.getVoices();
-    console.log('🎤 Voces disponibles:');
-    voices.forEach((voice, index) => {
-      console.log(`${index}: ${voice.name} (${voice.lang})`);
-    });
+    console.log('🎤 Voces disponibles:', voices.length);
+    
+    // 🎯 Buscar específicamente "Google español"
+    this.selectedFemaleVoice = voices.find(voice => 
+      voice.name === 'Google español'
+    );
+    
+    // Si no está disponible, buscar alternativas similares
+    if (!this.selectedFemaleVoice) {
+      this.selectedFemaleVoice = voices.find(voice => 
+        voice.name.includes('Google') && voice.lang.startsWith('es')
+      ) || voices.find(voice => 
+        voice.lang.startsWith('es')
+      );
+    }
+    
+    if (this.selectedFemaleVoice) {
+      console.log('✅ Voz seleccionada:', this.selectedFemaleVoice.name);
+    } else {
+      console.warn('⚠️ "Google español" no disponible, usando voz por defecto');
+    }
   }
 
   ngOnDestroy() {
-    // Detener voz al destruir componente
     this.stopSpeaking();
   }
 
@@ -80,12 +99,10 @@ export class ChatbotComponent implements OnInit, OnDestroy {
       this.isMinimized = false;
       setTimeout(() => this.scrollToBottom(), 100);
       
-      // Reproducir bienvenida si es la primera vez
       if (this.messages.length === 1 && this.voiceEnabled) {
-        this.speak(this.messages[0].content);
+        this.speakText(this.messages[0].content);
       }
     } else {
-      // Detener voz al cerrar
       this.stopSpeaking();
     }
   }
@@ -104,7 +121,6 @@ export class ChatbotComponent implements OnInit, OnDestroy {
     this.userMessage = '';
     this.isLoading = true;
 
-    // Detener cualquier voz activa
     this.stopSpeaking();
 
     this.messages.push({
@@ -115,19 +131,27 @@ export class ChatbotComponent implements OnInit, OnDestroy {
 
     this.scrollToBottom();
 
+    // 🚀 NUEVO: Variable para acumular la respuesta completa
+    let fullResponse = '';
+    let currentParagraph = '';
+
     this.geminiService.sendMessage(message).subscribe({
       next: (responseText: string) => {
+        fullResponse = responseText;
+        
+        // Agregar mensaje completo al chat
         this.messages.push({
           role: 'assistant',
           content: responseText,
           timestamp: new Date()
         });
+        
         this.isLoading = false;
         this.scrollToBottom();
         
-        // 🎤 Reproducir respuesta con voz
+        // 🎤 NUEVO: Hablar por párrafos para respuesta más rápida
         if (this.voiceEnabled) {
-          this.speak(responseText);
+          this.speakInParagraphs(responseText);
         }
         
         this.detectRoute(responseText);
@@ -135,88 +159,134 @@ export class ChatbotComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error al comunicarse con Gemini:', error);
         const errorMsg = 'Lo siento, hubo un error al procesar tu mensaje. Por favor intenta de nuevo.';
+        
         this.messages.push({
           role: 'assistant',
           content: errorMsg,
           timestamp: new Date()
         });
+        
         this.isLoading = false;
         this.scrollToBottom();
         
         if (this.voiceEnabled) {
-          this.speak(errorMsg);
+          this.speakText(errorMsg);
         }
       }
     });
   }
 
-  // 🎤 FUNCIONES DE VOZ
-  speak(text: string) {
-    // Limpiar texto de emojis y caracteres especiales usando un método más compatible
-    const cleanText = text
-      .replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
-      .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Símbolos & pictogramas
-      .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transporte & símbolos de mapa
-      .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, '') // Banderas
-      .replace(/[\u{2600}-\u{26FF}]/gu, '')   // Símbolos varios
-      .replace(/[\u{2700}-\u{27BF}]/gu, '')   // Dingbats
-      .trim();
+  // 🎤 NUEVO: Hablar texto dividido en párrafos (más natural y rápido)
+  private speakInParagraphs(text: string) {
+    // Dividir en párrafos (por saltos de línea o puntos seguidos)
+    const paragraphs = text
+      .split(/\n+|(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ])/)
+      .map(p => p.trim())
+      .filter(p => p.length > 0);
     
-    if (!cleanText || !this.voiceEnabled) return;
+    console.log(`📝 Dividido en ${paragraphs.length} párrafos`);
+    
+    // Hablar cada párrafo secuencialmente
+    this.speakParagraphsSequentially(paragraphs, 0);
+  }
 
-    // Cancelar cualquier voz anterior
-    this.stopSpeaking();
+  // 🎤 NUEVO: Hablar párrafos uno tras otro
+  private speakParagraphsSequentially(paragraphs: string[], index: number) {
+    if (index >= paragraphs.length || !this.voiceEnabled) {
+      this.isSpeaking = false;
+      return;
+    }
 
-    this.currentUtterance = new SpeechSynthesisUtterance(cleanText);
+    const paragraph = paragraphs[index];
+    const cleanText = this.cleanTextForSpeech(paragraph);
     
-    // 👩 Configurar voz FEMENINA en español
-    const voices = this.speechSynthesis.getVoices();
+    if (!cleanText) {
+      this.speakParagraphsSequentially(paragraphs, index + 1);
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
     
-    // Buscar voz femenina en español (prioridad)
-    const femaleSpanishVoice = voices.find(voice => 
-      (voice.lang.startsWith('es') || voice.lang.startsWith('es-')) &&
-      (voice.name.toLowerCase().includes('female') || 
-       voice.name.toLowerCase().includes('mujer') ||
-       voice.name.toLowerCase().includes('maria') ||
-       voice.name.toLowerCase().includes('helena') ||
-       voice.name.toLowerCase().includes('monica') ||
-       voice.name.toLowerCase().includes('paulina') ||
-       !voice.name.toLowerCase().includes('male'))
-    );
-    
-    // Si no encuentra femenina específica, buscar cualquier voz en español
-    const spanishVoice = femaleSpanishVoice || voices.find(voice => 
-      voice.lang.startsWith('es')
-    );
-    
-    if (spanishVoice) {
-      this.currentUtterance.voice = spanishVoice;
-      console.log('🎤 Voz seleccionada:', spanishVoice.name);
+    // 👩 Aplicar voz femenina seleccionada
+    if (this.selectedFemaleVoice) {
+      utterance.voice = this.selectedFemaleVoice;
     }
     
-    this.currentUtterance.lang = 'es-ES';
-    this.currentUtterance.rate = 1.15;  // 🚀 Más rápida (1.0 = normal, 1.15 = 15% más rápida)
-    this.currentUtterance.pitch = 1.2;  // 🎵 Tono más agudo/femenino (1.0 = normal)
-    this.currentUtterance.volume = 1.0;
+    utterance.lang = 'es-ES';
+    utterance.rate = 1.2;   // 🚀 Velocidad configurada
+    utterance.pitch = 1.3;  // 🎵 Tono configurado
+    utterance.volume = 1.0;
 
-    // Eventos
-    this.currentUtterance.onstart = () => {
+    utterance.onstart = () => {
       this.isSpeaking = true;
-      console.log('🎤 Iniciando voz...');
+      console.log(`🎤 Hablando párrafo ${index + 1}/${paragraphs.length}`);
     };
 
-    this.currentUtterance.onend = () => {
-      this.isSpeaking = false;
-      console.log('🎤 Voz finalizada');
+    utterance.onend = () => {
+      // Continuar con el siguiente párrafo
+      setTimeout(() => {
+        this.speakParagraphsSequentially(paragraphs, index + 1);
+      }, 200); // Pequeña pausa entre párrafos
     };
 
-    this.currentUtterance.onerror = (event) => {
+    utterance.onerror = (event) => {
       console.error('❌ Error en síntesis de voz:', event);
       this.isSpeaking = false;
     };
 
-    // Reproducir
-    this.speechSynthesis.speak(this.currentUtterance);
+    this.currentUtterance = utterance;
+    this.speechSynthesis.speak(utterance);
+  }
+
+  // 🎤 Método simple para hablar texto completo (usado en bienvenida y errores)
+  private speakText(text: string) {
+    const cleanText = this.cleanTextForSpeech(text);
+    if (!cleanText || !this.voiceEnabled) return;
+
+    this.stopSpeaking();
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    
+    // 👩 Aplicar voz femenina seleccionada
+    if (this.selectedFemaleVoice) {
+      utterance.voice = this.selectedFemaleVoice;
+    }
+    
+    utterance.lang = 'es-ES';
+    utterance.rate = 1.2;   // 🚀 Velocidad configurada
+    utterance.pitch = 1.3;  // 🎵 Tono configurado
+    utterance.volume = 1.0;
+
+    utterance.onstart = () => {
+      this.isSpeaking = true;
+      console.log('🎤 Iniciando voz...');
+    };
+
+    utterance.onend = () => {
+      this.isSpeaking = false;
+      console.log('🎤 Voz finalizada');
+    };
+
+    utterance.onerror = (event) => {
+      console.error('❌ Error en síntesis de voz:', event);
+      this.isSpeaking = false;
+    };
+
+    this.currentUtterance = utterance;
+    this.speechSynthesis.speak(utterance);
+  }
+
+  // 🧹 NUEVO: Limpiar texto para síntesis de voz
+  private cleanTextForSpeech(text: string): string {
+    return text
+      .replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
+      .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Símbolos & pictogramas
+      .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transporte
+      .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, '') // Banderas
+      .replace(/[\u{2600}-\u{26FF}]/gu, '')   // Símbolos varios
+      .replace(/[\u{2700}-\u{27BF}]/gu, '')   // Dingbats
+      .replace(/[*_~`]/g, '')                 // Markdown
+      .trim();
   }
 
   stopSpeaking() {
