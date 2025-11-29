@@ -1,0 +1,69 @@
+<!-- order-notification.component.html -->
+<div class="notification-container">
+  <div 
+    *ngFor="let notification of notifications" 
+    class="notification-card"
+    [@slideIn]>
+    
+    <!-- Header con animación -->
+    <div class="notification-header">
+      <div class="notification-icon">
+        <i class="fas fa-motorcycle"></i>
+      </div>
+      <div class="notification-title">
+        <span>¡Nuevo Pedido Asignado!</span>
+        <div class="pulse-indicator" *ngIf="isPlaying"></div>
+      </div>
+      <button class="btn-close" (click)="closeNotification(notification)" title="Cerrar">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Cuerpo de la notificación -->
+    <div class="notification-body">
+      <div class="notification-info">
+        <div class="info-row highlight">
+          <span class="label">
+            <i class="fas fa-receipt"></i> Pedido #:
+          </span>
+          <span class="value">{{ notification.orderId }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">
+            <i class="fas fa-user-tie"></i> Conductor:
+          </span>
+          <span class="value">{{ notification.driverName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">
+            <i class="fas fa-motorcycle"></i> Motocicleta:
+          </span>
+          <span class="value">{{ notification.motorcyclePlate }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">
+            <i class="fas fa-clock"></i> Hora:
+          </span>
+          <span class="value">{{ notification.timestamp | date:'hh:mm:ss a' }}</span>
+        </div>
+      </div>
+
+      <!-- Animación de ondas sonoras -->
+      <div class="notification-animation" *ngIf="isPlaying">
+        <div class="sound-wave-container">
+          <div class="sound-wave">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="speaking-text">Anunciando...</span>
+        </div>
+        <button class="btn-stop-speech" (click)="stopSpeech()" title="Silenciar anuncio">
+          <i class="fas fa-volume-mute"></i> Silenciar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

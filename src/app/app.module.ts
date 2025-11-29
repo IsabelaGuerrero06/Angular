@@ -14,6 +14,9 @@ import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
+// ✅ Importar el componente de notificaciones
+import { OrderNotificationComponent } from './components/order-notification/order-notification.component';
+
 
 @NgModule({
   imports: [
@@ -28,7 +31,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    AuthLayoutComponent
+    AuthLayoutComponent,
+    OrderNotificationComponent  // ✅ Agregar aquí
   ],
   providers: [
     {
